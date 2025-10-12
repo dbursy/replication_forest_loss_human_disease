@@ -55,6 +55,11 @@ datassets
 │   │   ├── Hansen_GFC-2019-v1.7_lossyear_20N_000E.tif
 │   │   └── Hansen_GFC-2019-v1.7_lossyear_20N_010E.tif
 │   └── treecover
+│   │   ├── Hansen_GFC2015_treecover2000_10N_000E.tif
+│   │   ├── Hansen_GFC2015_treecover2000_10N_010E.tif
+│   │   ├── Hansen_GFC2015_treecover2000_20N_000E.tif
+│   │   └── Hansen_GFC2015_treecover2000_20N_010E.tif
+│   └── treecover_2019
 │       ├── Hansen_GFC-2019-v1.7_treecover2000_10N_000E.tif
 │       ├── Hansen_GFC-2019-v1.7_treecover2000_10N_010E.tif
 │       ├── Hansen_GFC-2019-v1.7_treecover2000_20N_000E.tif
