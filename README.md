@@ -4,6 +4,15 @@ The aim of this repository is to conduct a replication study of the following re
 
 Berazneva, Julia, and Tanya S. Byker. 2017. "Does Forest Loss Increase Human Disease? Evidence from Nigeria." American Economic Review 107 (5): 516–21. [Available here](https://doi.org/10.1257/aer.p20171132)
 
+The aim of this project is to replicate the main results of the original study using the authors’ replication materials and to extend the analysis by incorporating an additional DHS survey wave from 2018.
+
+## Repository Overview
+
+The repository includes:
+- **Python notebooks** to process raw data sources listed in the original study and construct analysis datasets.
+- **Stata do-files** to replicate the main empirical results and tables, and to implement extensions using the expanded dataset.
+- Supporting resources and documentation required for replication.
+
 ## 🚀 Prerequisites
 
 ### Virtual Environment
@@ -29,7 +38,7 @@ pip freeze > requirements.txt
 
 ### Data Directory
 
-The data directory is structured as follows
+Raw data used in this project follow the sources cited in the original study and are organized as shown below. File names and directory structure are preserved to ensure reproducibility.
 
 ```bash
 datassets
@@ -85,3 +94,12 @@ datassets
     └── af_PHIHOX_T__M_sd2_250m.tif
 ```
 
+## Replication and Extension
+
+The replication analysis uses DHS survey waves from **2008** and **2013**, consistent with the original study.  
+The extended analysis additionally incorporates the **2018 DHS survey wave**.  
+All data processing steps and any deviations from the original replication materials are documented in the Python notebooks and Stata do-files.
+
+For additional details, see:
+- the README in the `scripts/` directory (Stata replication scripts), and
+- the README in the `notebooks/` directory (Python data-processing notebooks).
