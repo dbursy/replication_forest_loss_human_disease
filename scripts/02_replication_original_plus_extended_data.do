@@ -18,10 +18,7 @@ Analysis of the Original Dataset
 
 clear all
 
-// use "/resources/113539-V1/Data_programs_readme/dta.dta", clear
-
-use "/Users/dominikbursy/Documents/8_PhD_New/replication_game/resources/113539-V1/Data_programs_readme/dta.dta", clear
-
+use "../resources/113539-V1/Data_programs_readme/dta.dta", clear
 
 drop if missing(LGA)
 
@@ -198,8 +195,7 @@ foreach y of local outcomes {
 * Analysis of the Replicated Raw Dataset – Survey Wave 2008 to 2013
 ********************************************************************/
 
-// use "../output/dta_replication_full.dta", clear
-use "/Users/dominikbursy/Documents/8_PhD_New/replication_game/output/dta_replication_full.dta",clear
+use "../output/dta_replication_full.dta", clear
 
 *------------------------------------------------------------
 * Identify LGAs containing at least one cluster per DHS wave(DHS 2008 and 2013)
@@ -327,6 +323,15 @@ estimates  store table_column_2_`y' // added
 
 estimates dir // added
 
+foreach y in fever diarrhea cough {
+    estimates restore table_column_2_`y'
+    di _n "=== `y' (Replicated data, column 2) ==="
+    lincom forest_loss_0
+    lincom forest_loss_0 + forest_loss_1
+    lincom forest_loss_0 + forest_loss_1 + forest_loss_2
+    lincom forest_loss_0 + forest_loss_1 + forest_loss_2 + forest_loss_3
+}
+
 *------------------------------------------------------------
 * Reduced Specification 3 of Berazneva and Byker Table 1 
 * 
@@ -373,9 +378,7 @@ foreach y of local outcomes {
 * Analysis of the Replucated and Extended Raw Dataset – Survey Wave 2008 to 2018     *
 **********************************************************************
 
-// use "../output/dta_replication_full_extended.dta", clear
-
-use "/Users/dominikbursy/Documents/8_PhD_New/replication_game/output/dta_replication_full_extended.dta",clear
+use "../output/dta_replication_full_extended.dta", clear
 
 *------------------------------------------------------------
 * Identify LGAs containing at least one cluster per DHS wave(DHS 2008 and 2013)
@@ -561,6 +564,15 @@ estimates  store table_column_3_`y' // added
 }
 
 estimates dir
+
+foreach y in fever diarrhea cough {
+    estimates restore table_column_3_`y'
+    di _n "=== `y' (extended data, column 3) ==="
+    lincom forest_loss_0
+    lincom forest_loss_0 + forest_loss_1
+    lincom forest_loss_0 + forest_loss_1 + forest_loss_2
+    lincom forest_loss_0 + forest_loss_1 + forest_loss_2 + forest_loss_3
+}
 
 *------------------------------------------------------------
 * Reduced Specification 3 of Berazneva and Byker Table 1 
@@ -804,8 +816,8 @@ local common ///
     xtitle("Years since forest loss", size(medsmall)) ///
     ytitle("Cumulative impact of forest loss", size(medsmall)) ///
     xlabel(0(1)3, nogrid labsize(small)) ///
-    ylabel(-6(2)6, angle(horizontal) nogrid labsize(small)) ///
-    yscale(range(-6 6)) ///
+    ylabel(-10(2)10, angle(horizontal) nogrid labsize(small)) ///
+    yscale(range(-10 10)) ///
     legend(off) ///
     graphregion(color(white)) ///
     plotregion(style(none))
@@ -932,8 +944,8 @@ local common ///
     xtitle("Years since forest loss", size(medsmall)) ///
     ytitle("Cumulative impact of forest loss", size(medsmall)) ///
     xlabel(0(1)3, nogrid labsize(small)) ///
-    ylabel(-6(2)6, angle(horizontal) nogrid labsize(small)) ///
-    yscale(range(-6 6)) ///
+    ylabel(-10(2)10, angle(horizontal) nogrid labsize(small)) ///
+    yscale(range(-10 10)) ///
     legend(off) ///
     graphregion(color(white)) ///
     plotregion(style(none))

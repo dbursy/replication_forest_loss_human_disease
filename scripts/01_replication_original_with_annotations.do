@@ -249,8 +249,8 @@ local common ///
     xtitle("Years since forest loss", size(medsmall)) ///
     ytitle("Cumulative impact of forest loss", size(medsmall)) ///
     xlabel(0(1)3, nogrid labsize(small)) ///
-    ylabel(-6(2)6, angle(horizontal) nogrid labsize(small)) ///
-    yscale(range(-6 6)) ///
+    ylabel(-10(2)10, angle(horizontal) nogrid labsize(small)) ///
+	yscale(range(-10 10)) ///
     legend(off) ///
     graphregion(color(white)) ///
     plotregion(style(none))
