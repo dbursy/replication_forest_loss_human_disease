@@ -18,8 +18,11 @@ Analysis of the Original Dataset
 
 clear all
 
-use "../resources/113539-V1/Data_programs_readme/dta.dta", clear
- 
+// use "/resources/113539-V1/Data_programs_readme/dta.dta", clear
+
+use "/Users/dominikbursy/Documents/8_PhD_New/replication_game/resources/113539-V1/Data_programs_readme/dta.dta", clear
+
+
 drop if missing(LGA)
 
 *------------------------------------------------------------
@@ -117,9 +120,12 @@ svyset wave_psu [pweight=DN_wgt], strata(stratid) singleunit(certainty)
 
 *Robustness 1: Updated De-Normalization with original cleaned raw data
 gen DN_wgt_c = . // De normalized weight
-replace DN_wgt_c=(v005/1000000)*(35882027/28647) if DHSYEAR==2008 
+* replace DN_wgt_c=(v005/1000000)*(35882027/28647) if DHSYEAR==2008 
+replace DN_wgt_c=(v005/1000000)*(35882027/33385) if DHSYEAR==2008
+
 // 35882027 in 2008 UN 2025 / v005 for 2008 is 28647
-replace DN_wgt_c=(v005/1000000)*(41018918/31225) if DHSYEAR==2013 
+* replace DN_wgt_c=(v005/1000000)*(41018918/31225) if DHSYEAR==2013 
+replace DN_wgt_c=(v005/1000000)*(41018918/38948) if DHSYEAR==2013
 // 41018918 in 2013 UN 2025 / v005 for 2013 is 31225
 
 gen DN_wgt_comparison = DN_wgt - DN_wgt_c 
@@ -192,7 +198,8 @@ foreach y of local outcomes {
 * Analysis of the Replicated Raw Dataset – Survey Wave 2008 to 2013
 ********************************************************************/
 
-use "../output/dta_replication_full.dta", clear
+// use "../output/dta_replication_full.dta", clear
+use "/Users/dominikbursy/Documents/8_PhD_New/replication_game/output/dta_replication_full.dta",clear
 
 *------------------------------------------------------------
 * Identify LGAs containing at least one cluster per DHS wave(DHS 2008 and 2013)
@@ -289,9 +296,11 @@ svyset wave_psu [pweight=DN_wgt], strata(stratid) singleunit(certainty)
 
 * Robustness 1: Updated De-Normalization with original cleaned raw data ***
 gen DN_wgt_c = . // De normalized weight
-replace DN_wgt_c=(v005/1000000)*(35882027/28647) if DHSYEAR==2008 
+* replace DN_wgt_c=(v005/1000000)*(35882027/28647) if DHSYEAR==2008 
+replace DN_wgt_c=(v005/1000000)*(35882027/33385) if DHSYEAR==2008
 // 35882027 in 2008 UN 2025 / v005 for 2008 is 28647
-replace DN_wgt_c=(v005/1000000)*(41018918/31225) if DHSYEAR==2013 
+* replace DN_wgt_c=(v005/1000000)*(41018918/31225) if DHSYEAR==2013 
+replace DN_wgt_c=(v005/1000000)*(41018918/38948) if DHSYEAR==2013
 // 41018918 in 2013 UN 2025 / v005 for 2013 is 31225
 
 gen var = DN_wgt - DN_wgt_c 
@@ -364,7 +373,9 @@ foreach y of local outcomes {
 * Analysis of the Replucated and Extended Raw Dataset – Survey Wave 2008 to 2018     *
 **********************************************************************
 
-use "../output/dta_replication_full_extended.dta", clear
+// use "../output/dta_replication_full_extended.dta", clear
+
+use "/Users/dominikbursy/Documents/8_PhD_New/replication_game/output/dta_replication_full_extended.dta",clear
 
 *------------------------------------------------------------
 * Identify LGAs containing at least one cluster per DHS wave(DHS 2008 and 2013)
@@ -432,7 +443,7 @@ forvalues i=0/17{ // added
 gen treecover_2000=.
 
 foreach i of numlist 2008 2013 2018 { 
-	forvalues j=2001/2013 {
+	forvalues j=2001/2018 {
 	local lag=`i'-`j'
 	di `lag'
 	if `lag'<0 {
@@ -496,9 +507,19 @@ svyset wave_psu [pweight=DN_wgt], strata(stratid) singleunit(certainty)
 *------------------------------------------------------------ 
 
 gen DN_wgt_c = . // De-Normalized weight
-replace DN_wgt_c=(v005/1000000)*(35882027/28647) if DHSYEAR==2008 
-replace DN_wgt_c=(v005/1000000)*(41018918/31225) if DHSYEAR==2013 
-replace DN_wgt_c=(v005/1000000)*(47146386/33775) if DHSYEAR==2018 
+* replace DN_wgt_c=(v005/1000000)*(35882027/28647) if DHSYEAR==2008 
+* replace DN_wgt_c=(v005/1000000)*(41018918/31225) if DHSYEAR==2013 
+* replace DN_wgt_c=(v005/1000000)*(47146386/33775) if DHSYEAR==2018 
+
+
+* https://microdata.worldbank.org//catalog/1459
+* https://microdata.worldbank.org/catalog/2014
+* https://dhsprogram.com/pubs/pdf/GF34/GF34.pdf
+* https://microdata.worldbank.org/catalog/2014
+
+replace DN_wgt_c=(v005/1000000)*(35882027/33385) if DHSYEAR==2008
+replace DN_wgt_c=(v005/1000000)*(41018918/38948) if DHSYEAR==2013
+replace DN_wgt_c=(v005/1000000)*(47146386/41821) if DHSYEAR==2018
 * use this for female at reprodutive age:
 * https://population.un.org/dataportal/ -- FRA 2008 - 2018
 
@@ -510,10 +531,15 @@ egen wave_psu_c=group(DHSYEAR v021)
 svyset wave_psu [pweight=DN_wgt_c], strata(stratid_c) singleunit(certainty) 
 
 *------------------------------------------------------------
+
+tabstat fever diarrhea cough if LGA_overlap_2==7, by(DHSYEAR) stat(n mean sd) format(%9.3f) 
+
+*------------------------------------------------------------
 * Full Specification 3 of Berazneva and Byker Table 1 
 * 
 * Replication Report Column 3
 *------------------------------------------------------------
+
 
 local outcome "fever diarrhea cough"
 
@@ -525,9 +551,12 @@ estimates store table_column_3_`y' // added
 svy: reg `y' forest_loss_0-forest_loss_3 i.DHSYEAR i.LGA i.month#i.region#i.DHSYEAR i.month treecover_2000 no_HH_members no_kids_under_5 time_to_water head_HH_age HH_head_edu_years rural toilet poorest firewood floor age  age_resp edu_years no_child_total no_child_living livewith christian muslim yoruba igbo hausa resp_slept_net married resp_works pregnant if LGA_overlap_2==7
 estimates  store table_column_3_`y' // added
 
-svy: reg `y' forest_loss_0-forest_loss_3 i.DHSYEAR i.LGA i.month#i.region#i.DHSYEAR i.month treecover_2000 cec_ave_pt ph_ave_pt occ_ave_pt altitude luminosity_chg_0-luminosity_chg_2 no_HH_members no_kids_under_5 time_to_water head_HH_age HH_head_edu_years rural toilet poorest firewood floor age  age_resp edu_years no_child_total no_child_living livewith christian muslim yoruba igbo hausa resp_slept_net married resp_works pregnant if LGA_overlap_2==7 
-estimates  store table_column_3_`y' // added
+// svy: reg `y' forest_loss_0-forest_loss_3 i.DHSYEAR i.LGA i.month#i.region#i.DHSYEAR i.month treecover_2000 cec_ave_pt ph_ave_pt occ_ave_pt altitude luminosity_chg_0-luminosity_chg_2 no_HH_members no_kids_under_5 time_to_water head_HH_age HH_head_edu_years rural toilet poorest firewood floor age  age_resp edu_years no_child_total no_child_living livewith christian muslim yoruba igbo hausa resp_slept_net married resp_works pregnant if LGA_overlap_2==7 
+// estimates  store table_column_3_`y' // added
 
+// Excluding luminosity
+svy: reg `y' forest_loss_0-forest_loss_3 i.DHSYEAR i.LGA i.month#i.region#i.DHSYEAR i.month treecover_2000 cec_ave_pt ph_ave_pt occ_ave_pt altitude no_HH_members no_kids_under_5 time_to_water head_HH_age HH_head_edu_years rural toilet poorest firewood floor age  age_resp edu_years no_child_total no_child_living livewith christian muslim yoruba igbo hausa resp_slept_net married resp_works pregnant if LGA_overlap_2==7
+estimates  store table_column_3_`y' // added
 
 }
 
@@ -713,6 +742,134 @@ esttab table_column_1_cough table_column_2_cough table_column_3_cough ///
 
 /********************************************************************
 Figure 2: Cumulative impact of forest loss 
+Replication Dataset Full Specification 2
+
+********************************************************************/
+
+*------------------------------------------------------------
+* Build cumulative effects dataset 
+*------------------------------------------------------------
+
+tempfile cumdata
+tempname handle
+
+postfile `handle' str10 outcome byte year double beta ll95 ul95 using `cumdata', replace
+
+foreach y in fever diarrhea cough {
+
+    estimates restore table_column_2_`y'
+
+    forvalues t = 0/3 {
+
+        * Build cumulative expression: b0, b0+b1, b0+b1+b2, b0+b1+b2+b3
+        local expr "forest_loss_0"
+        if `t' >= 1 local expr "`expr' + forest_loss_1"
+        if `t' >= 2 local expr "`expr' + forest_loss_2"
+        if `t' >= 3 local expr "`expr' + forest_loss_3"
+
+        lincom `expr', level(95)
+
+        * lincom returns r(estimate), r(lb), r(ub)
+        post `handle' ("`y'") (`t') (r(estimate)) (r(lb)) (r(ub))
+    }
+}
+
+postclose `handle'
+use `cumdata', clear
+
+*------------------------------------------------------------
+* Panel labels/order
+*------------------------------------------------------------
+
+set scheme s1mono
+
+gen byte out = .
+replace out = 1 if outcome == "fever"
+replace out = 2 if outcome == "diarrhea"
+replace out = 3 if outcome == "cough"
+
+label define outlbl 1 "Panel A. Malaria (fever)" ///
+                    2 "Panel B. Diarrhea" ///
+                    3 "Panel C. Respiratory (cough)", replace
+label values out outlbl
+
+label var year "Years since forest loss"
+label var beta "Cumulative impact of forest loss"
+
+*------------------------------------------------------------
+* Common graph options 
+*------------------------------------------------------------
+
+local common ///
+    xtitle("Years since forest loss", size(medsmall)) ///
+    ytitle("Cumulative impact of forest loss", size(medsmall)) ///
+    xlabel(0(1)3, nogrid labsize(small)) ///
+    ylabel(-6(2)6, angle(horizontal) nogrid labsize(small)) ///
+    yscale(range(-6 6)) ///
+    legend(off) ///
+    graphregion(color(white)) ///
+    plotregion(style(none))
+
+local layers ///
+    (function y=0, range(0 3) lcolor(gs10) lwidth(vthin)) ///
+    (line ll95 year, lpattern(shortdash_dot) lcolor(gs8) lwidth(medthick)) ///
+    (line ul95 year, lpattern(shortdash_dot) lcolor(gs8) lwidth(medthick)) ///
+    (line beta year, lcolor(black) lwidth(medthick)) ///
+    (scatter beta year, mcolor(gs8) msymbol(circle) msize(vsmall))
+
+*------------------------------------------------------------
+* Panel A: Fever
+*------------------------------------------------------------
+
+twoway ///
+    `layers' ///
+    if outcome=="fever", ///
+    title("Panel A. Malaria (fever)", size(medsmall)) ///
+    `common'
+
+graph save gA_fever.gph, replace
+
+*------------------------------------------------------------
+* Panel B: Diarrhea
+*------------------------------------------------------------
+
+twoway ///
+    `layers' ///
+    if outcome=="diarrhea", ///
+    title("Panel B. Diarrhea", size(medsmall)) ///
+    `common'
+
+graph save gB_diarrhea.gph, replace
+
+*------------------------------------------------------------
+* Panel C: Cough
+*------------------------------------------------------------
+
+twoway ///
+    `layers' ///
+    if outcome=="cough", ///
+    title("Panel C. Respiratory (cough)", size(medsmall)) ///
+    `common'
+
+graph save gC_cough.gph, replace
+
+*------------------------------------------------------------
+* Combine graphs and export 
+*------------------------------------------------------------
+
+graph combine gA_fever.gph gB_diarrhea.gph gC_cough.gph, ///
+    col(3) ///
+    graphregion(color(white))
+
+graph export "../figures/Berazneva_Byker_Figure_2_Updated.png", replace width(3000)
+
+* Remove intermediate graph files before regenerating figures
+foreach f in gA_fever gB_diarrhea gC_cough {
+    capture erase "`f'.gph"
+}
+
+/********************************************************************
+Figure 2: Cumulative impact of forest loss 
 Extended Dataset Full Specification 3
 
 ********************************************************************/
@@ -832,7 +989,7 @@ graph combine gA_fever.gph gB_diarrhea.gph gC_cough.gph, ///
     col(3) ///
     graphregion(color(white))
 
-graph export "../figures/Berazneva_Byker_Figure_2_Updated.png", replace width(3000)
+graph export "../figures/Berazneva_Byker_Figure_2_Updated_Extended.png", replace width(3000)
 
 * Remove intermediate graph files before regenerating figures
 foreach f in gA_fever gB_diarrhea gC_cough {
